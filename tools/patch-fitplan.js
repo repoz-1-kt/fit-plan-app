@@ -45,7 +45,15 @@ function addExtraMeals(source) {
   return source.replace(marker, ',' + extraMeals + marker);
 }
 
+function showAllMealsInConstructor(source) {
+  const next = "function opts(type,selected){let preferred=pool(type,profile()),rest=meals.filter(x=>!preferred.includes(x)),list=preferred.concat(rest);return'<option value=\"skip\">Пропустить этот прием пищи</option>'+list.map(x=>`<option value=\"${meals.indexOf(x)}\" ${x===selected?'selected':''}>${x.type}: ${x.title}</option>`).join('')}";
+  source = source.replace(/function opts\(type,selected\)\{return'<option value="skip">Пропустить этот прием пищи<\/option>'\+pool\(type,profile\(\)\)\.map\(x=>`<option value="\$\{meals\.indexOf\(x\)\}" \$\{x===selected\?'selected':''\}>\$\{x\.title\}<\/option>`\)\.join\(''\)\}/, next);
+  source = source.replace(/function opts\(type,selected\)\{let preferred=pool\(type,profile\(\)\),rest=meals\.filter\(x=>!preferred\.includes\(x\)\),list=preferred\.concat\(rest\);return'<option value="skip">Пропустить этот прием пищи<\/option>'\+list\.map\(x=>`<option value="\$\{meals\.indexOf\(x\)\}" \$\{x===selected\?'selected':''\}>\$\{x\.type\}: \$\{x\.title\}<\/option>`\)\.join\(''\)\}/, next);
+  return source;
+}
+
 html = addExtraMeals(html);
+html = showAllMealsInConstructor(html);
 
 const script = html.match(/<script>([\s\S]*)<\/script>/);
 if (!script) throw new Error('script not found');
