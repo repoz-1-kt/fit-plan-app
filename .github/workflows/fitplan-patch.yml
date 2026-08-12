@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/fitplan-patch.yml
       - tools/patch-fitplan.js
+      - tools/add-backup-tools.js
   workflow_dispatch:
 
 permissions:
@@ -22,12 +23,14 @@ jobs:
         with:
           node-version: 22
       - name: Apply UI patch
-        run: node tools/patch-fitplan.js
+        run: |
+          node tools/patch-fitplan.js
+          node tools/add-backup-tools.js
       - name: Commit patched app
         run: |
           git config user.name "FitPlan Bot"
           git config user.email "actions@github.com"
-          git add index.html tools/patch-fitplan.js .github/workflows/fitplan-patch.yml
+          git add index.html tools/patch-fitplan.js tools/add-backup-tools.js .github/workflows/fitplan-patch.yml
           if git diff --cached --quiet; then
             echo "No changes"
           else
